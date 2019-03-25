@@ -1,0 +1,108 @@
+SQL> --
+SQL> -- Author: <<< YOUR NAME GOES HERE >>>
+SQL> --
+SQL> -- IMPORTANT: use the names IC-1, IC-2, etc. as given below.
+SQL> -- --------------------------------------------------------------------
+SQL> -- The two DROP commands below are placed here for convenience in
+SQL> -- order to drop the tables if they exist. If the tables don't
+SQL> -- exist, you'll get an error - just ignore the error.
+SQL> --
+SQL> DROP TABLE Orders CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> DROP TABLE OrderLine CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> --
+SQL> CREATE TABLE Orders
+  2  (
+  3  orderNum INTEGER PRIMARY KEY,
+  4  priority CHAR(10) NOT NULL,
+  5  cost INTEGER NOT NULL,
+  6  /*
+  7  IC1: The priority is one of: high, medium, or low
+  8  */
+  9  CONSTRAINT IC1 CHECK (priority = 'high' OR priority = 'medium' OR priority = 'low'),
+ 10  /*
+ 11  IC2: The cost of a high priority order is above 2000.
+ 12  */
+ 13  CONSTRAINT IC2 CHECK (priority = 'high' AND cost < 2000),
+ 14  /*
+ 15  IC3: The cost of a medium priority order is between 800 and 2200 (inclusive).
+ 16  */
+ 17  CONSTRAINT IC3 CHECK (priority = 'medium' AND (cost >= 800 AND cost <=2200)),
+ 18  /*
+ 19  IC4: The cost of a low priority order is less than 1000.
+ 20  */
+ 21  CONSTRAINT IC4 CHECK (priority = 'low' AND cost < 1000)
+ 22  );
+
+Table created.
+
+SQL> --
+SQL> --
+SQL> CREATE TABLE OrderLine
+  2  (
+  3  orderNum INTEGER,
+  4  lineNum INTEGER,
+  5  item CHAR (10) NOT NULL,
+  6  quantity INTEGER,
+  7  PRIMARY KEY (orderNum, lineNum),
+  8  /*
+  9  IC5: Every order line must belong to an order in the Order table.
+ 10  Also: if an order is deleted then all its order lines must be deleted.
+ 11  IMPORTANT: DO NOT declare this IC as DEFERRABLE.
+ 12  */
+ 13  CONSTRAINT IC5 FOREIGN KEY (orderNum)
+ 14  			 REFERENCES Orders(orderNum)
+ 15  			 ON DELETE CASCADE
+ 16  );
+
+Table created.
+
+SQL> --
+SQL> -- ----------------------------------------------------------------
+SQL> -- TESTING THE SCHEMA
+SQL> -- ----------------------------------------------------------------
+SQL> INSERT INTO Orders VALUES (10, 'high', 2400); >/* Good */
+  2  INSERT INTO Orders VALUES (20, 'high', 1900); >/* Bad: Cost is too low */
+  3  INSERT INTO Orders VALUES (30, 'high', 2100); >/* Good */
+  4  INSERT INTO Orders VALUES (40, 'medium', 700);>/* Bad: Cost is too low */
+  5  INSERT INTO Orders VALUES (50, 'low', 1100);  >/* Bad: Cost is too high */
+  6  INSERT INTO Orders VALUES (60, 'low', 900);   >/* Good */
+  7  SELECT * from Orders;
+INSERT INTO Orders VALUES (10, 'high', 2400); >/* Good */
+                                            *
+ERROR at line 1:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> -- ----------------------------------------------------------------
+SQL> INSERT INTO OrderLine VALUES (10, 1, 'AAA', 200); /* Good? */
+  2  INSERT INTO OrderLine VALUES (10, 2, 'BBB', 300); /* Good? */
+  3  INSERT INTO OrderLine VALUES (60, 1, 'CCC', 5);   /* Good? */
+  4  INSERT INTO OrderLine VALUES (15, 1, 'AAA', 7);   /* Bad: 15 isn't an order that exist */
+  5  SELECT * FROM OrderLine;
+INSERT INTO OrderLine VALUES (10, 1, 'AAA', 200); /* Good? */
+                                                *
+ERROR at line 1:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> --
+SQL> DELETE FROM Orders WHERE orderNum = 10;
+
+0 rows deleted.
+
+SQL> SELECT * From Orders;
+
+no rows selected
+
+SQL> SELECT * FROM OrderLine;
+
+no rows selected
+
+SQL> --
+SQL> SET ECHO OFF
