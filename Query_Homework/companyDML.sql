@@ -77,7 +77,9 @@ ORDER BY E.lname;
 /*(13B)
 For every employee who works on any project that is located in Houston: Find the employees ssn and lname, and the names of his/her dependent(s) and their relationship(s) to the employee. Notice that there will be one row per qualyfing dependent. Sort the results by employee lname.
 */
--- <<< Your SQL code goes here >>>
+SELECT E.ssn, E.lname, D.dependent_name, D.relationship
+FROM employee E, works_on W, dept_locations Dept, dependent D
+
 --
 -- SELF JOIN -------------------------------------------
 -- 
