@@ -24,7 +24,7 @@ SQL> --
 SQL> -- JOINING 3 TABLES ------------------------------
 SQL> --
 SQL> /*(11B)
-SQL> For every employee who works for more than 20 hours on any project that is controlled by the research department: Find the ssn, project number,  and number of hours. Sort the results by ssn.
+SQL> For every employee who works for more than 20 hours on any project that is controlled by the research department: Find the ssn, project number,  and number of hours. Sort the results by ssn. NOTE: IS THIS SUPPOSED TO BE A 2 TABLE JOIN?
 SQL> */
 SQL> SELECT W.essn, W.pno, W.hours
   2  FROM works_on W, project P
@@ -46,7 +46,19 @@ SQL> /*(12B)
 SQL> Write a query that consists of one block only.
 SQL> For every employee who works less than 10 hours on any project that is controlled by the department he works for: Find the employee's lname, his department number, project number, the number of the department controlling it, and the number of hours he works on that project. Sort the results by lname.
 SQL> */
-SQL> -- <<< Your SQL code goes here >>>
+SQL> SELECT E.lname, E.dno, W.pno, P.dnum, W.hours
+  2  FROM employee E, works_on W, project P
+  3  WHERE W.hours < 10.0 AND
+  4  	 W.essn = E.ssn AND
+  5  	 E.dno = P.dnum AND
+  6  	 P.pnumber = W.pno
+  7  ORDER BY E.lname;
+
+LNAME                  DNO        PNO       DNUM      HOURS                     
+--------------- ---------- ---------- ---------- ----------                     
+Jabbar                   4         30          4          5                     
+Smith                    5          2          5        7.5                     
+
 SQL> --
 SQL> -- JOINING 4 TABLES -------------------------
 SQL> --

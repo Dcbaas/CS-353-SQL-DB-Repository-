@@ -64,7 +64,13 @@ ORDER BY essn;
 Write a query that consists of one block only.
 For every employee who works less than 10 hours on any project that is controlled by the department he works for: Find the employee's lname, his department number, project number, the number of the department controlling it, and the number of hours he works on that project. Sort the results by lname.
 */
--- <<< Your SQL code goes here >>>
+SELECT E.lname, E.dno, W.pno, P.dnum, W.hours
+FROM employee E, works_on W, project P
+WHERE W.hours < 10.0 AND
+    W.essn = E.ssn AND
+    E.dno = P.dnum AND
+    P.pnumber = W.pno
+ORDER BY E.lname;
 --
 -- JOINING 4 TABLES -------------------------
 --
