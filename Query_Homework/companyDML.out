@@ -26,7 +26,19 @@ SQL> --
 SQL> /*(11B)
 SQL> For every employee who works for more than 20 hours on any project that is controlled by the research department: Find the ssn, project number,  and number of hours. Sort the results by ssn.
 SQL> */
-SQL> -- <<< Your SQL code goes here >>>
+SQL> SELECT W.essn, W.pno, W.hours
+  2  FROM works_on W, project P
+  3  WHERE W.hours > 20.0 AND
+  4  	 P.dnum = 5 AND
+  5  	 W.pno = P.pnumber
+  6  ORDER BY essn;
+
+ESSN             PNO      HOURS                                                 
+--------- ---------- ----------                                                 
+123456789          1       32.5                                                 
+666884444          3         40                                                 
+
+SQL> 
 SQL> --
 SQL> -- JOINING 3 TABLES ---------------------------
 SQL> --

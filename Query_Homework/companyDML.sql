@@ -48,9 +48,15 @@ ORDER BY ssn;
 -- JOINING 3 TABLES ------------------------------
 -- 
 /*(11B)
-For every employee who works for more than 20 hours on any project that is controlled by the research department: Find the ssn, project number,  and number of hours. Sort the results by ssn.
+For every employee who works for more than 20 hours on any project that is controlled by the research department: Find the ssn, project number,  and number of hours. Sort the results by ssn. NOTE: IS THIS SUPPOSED TO BE A 2 TABLE JOIN?
 */
--- <<< Your SQL code goes here >>>
+SELECT W.essn, W.pno, W.hours
+FROM works_on W, project P
+WHERE W.hours > 20.0 AND
+    P.dnum = 5 AND
+    W.pno = P.pnumber
+ORDER BY essn;
+    
 --
 -- JOINING 3 TABLES ---------------------------
 --
@@ -58,9 +64,7 @@ For every employee who works for more than 20 hours on any project that is contr
 Write a query that consists of one block only.
 For every employee who works less than 10 hours on any project that is controlled by the department he works for: Find the employee's lname, his department number, project number, the number of the department controlling it, and the number of hours he works on that project. Sort the results by lname.
 */
-SELECT *
-FROM employee E, department D, project P
-WHERE
+-- <<< Your SQL code goes here >>>
 --
 -- JOINING 4 TABLES -------------------------
 --
