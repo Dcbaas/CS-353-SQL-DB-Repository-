@@ -77,8 +77,13 @@ ORDER BY E.lname;
 /*(13B)
 For every employee who works on any project that is located in Houston: Find the employees ssn and lname, and the names of his/her dependent(s) and their relationship(s) to the employee. Notice that there will be one row per qualyfing dependent. Sort the results by employee lname.
 */
-SELECT E.ssn, E.lname, D.dependent_name, D.relationship
-FROM employee E, works_on W, dept_locations Dept, dependent D
+SELECT DISTINCT E.ssn, E.lname, D.dependent_name, D.relationship
+FROM employee E, works_on W, project P, dependent D
+WHERE P.plocation = 'Houston' AND
+    P.pnumber = W.pno AND
+    W.essn = E.ssn AND
+    E.ssn = D.essn
+ORDER BY E.lname;
 
 --
 -- SELF JOIN -------------------------------------------
@@ -87,14 +92,25 @@ FROM employee E, works_on W, dept_locations Dept, dependent D
 Write a query that consists of one block only.
 For every employee who works for a department that is different from his supervisor's department: Find his ssn, lname, department number; and his supervisor's ssn, lname, and department number. Sort the results by ssn.  
 */
--- <<< Your SQL code goes here >>>
+SELECT E1.ssn, E1.lname, E1.dno, E1.super_ssn
+FROM employee E1, employee E2
+WHERE E2.ssn = E1.super_ssn AND
+    E2.dno <> E1.dno
+ORDER BY E1.ssn;
 --
 -- USING MORE THAN ONE RANGE VARIABLE ON ONE TABLE -------------------
 --
 /*(15B)
 Find pairs of employee lname's such that the two employees in the pair work on the same project for the same number of hours. List every pair once only. Sort the result by the lname in the left column in the result. 
 */
--- <<< Your SQL code goes here >>>
+SELECT E1.lname, E2.lname, W1.pno, W1.hours
+FROM employee E1, employee E2, works_on W1, works_on W2
+WHERE E1.ssn = W1.essn AND
+    E2.ssn = W2.essn AND
+    W2.essn < W1.essn AND
+    W1.pno = W2.pno AND
+    W1.hours = W2.hours
+ORDER BY E1.lname;
 --
 /*(16B)
 For every employee who has more than one dependent: Find the ssn, lname, and number of dependents. Sort the result by lname

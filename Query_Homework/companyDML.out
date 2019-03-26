@@ -65,7 +65,22 @@ SQL> --
 SQL> /*(13B)
 SQL> For every employee who works on any project that is located in Houston: Find the employees ssn and lname, and the names of his/her dependent(s) and their relationship(s) to the employee. Notice that there will be one row per qualyfing dependent. Sort the results by employee lname.
 SQL> */
-SQL> -- <<< Your SQL code goes here >>>
+SQL> SELECT DISTINCT E.ssn, E.lname, D.dependent_name, D.relationship
+  2  FROM employee E, works_on W, project P, dependent D
+  3  WHERE P.plocation = 'Houston' AND
+  4  	 P.pnumber = W.pno AND
+  5  	 W.essn = E.ssn AND
+  6  	 E.ssn = D.essn
+  7  ORDER BY E.lname;
+
+SSN       LNAME           DEPENDENT_NAME  RELATION                              
+--------- --------------- --------------- --------                              
+987654321 Wallace         Abner           Spouse                                
+333445555 Wong            Alice           Daughter                              
+333445555 Wong            Joy             Spouse                                
+333445555 Wong            Theodore        Son                                   
+
+SQL> 
 SQL> --
 SQL> -- SELF JOIN -------------------------------------------
 SQL> --
@@ -73,14 +88,36 @@ SQL> /*(14B)
 SQL> Write a query that consists of one block only.
 SQL> For every employee who works for a department that is different from his supervisor's department: Find his ssn, lname, department number; and his supervisor's ssn, lname, and department number. Sort the results by ssn.
 SQL> */
-SQL> -- <<< Your SQL code goes here >>>
+SQL> SELECT E1.ssn, E1.lname, E1.dno, E1.super_ssn
+  2  FROM employee E1, employee E2
+  3  WHERE E2.ssn = E1.super_ssn AND
+  4  	 E2.dno <> E1.dno
+  5  ORDER BY E1.ssn;
+
+SSN       LNAME                  DNO SUPER_SSN                                  
+--------- --------------- ---------- ---------                                  
+333445555 Wong                     5 888665555                                  
+987654321 Wallace                  4 888665555                                  
+
 SQL> --
 SQL> -- USING MORE THAN ONE RANGE VARIABLE ON ONE TABLE -------------------
 SQL> --
 SQL> /*(15B)
 SQL> Find pairs of employee lname's such that the two employees in the pair work on the same project for the same number of hours. List every pair once only. Sort the result by the lname in the left column in the result.
 SQL> */
-SQL> -- <<< Your SQL code goes here >>>
+SQL> SELECT E1.lname, E2.lname, W1.pno, W1.hours
+  2  FROM employee E1, employee E2, works_on W1, works_on W2
+  3  WHERE E1.ssn = W1.essn AND
+  4  	 E2.ssn = W2.essn AND
+  5  	 W2.essn < W1.essn AND
+  6  	 W1.pno = W2.pno AND
+  7  	 W1.hours = W2.hours
+  8  ORDER BY E1.lname;
+
+LNAME           LNAME                  PNO      HOURS                           
+--------------- --------------- ---------- ----------                           
+Zelaya          Wong                    10         10                           
+
 SQL> --
 SQL> /*(16B)
 SQL> For every employee who has more than one dependent: Find the ssn, lname, and number of dependents. Sort the result by lname
