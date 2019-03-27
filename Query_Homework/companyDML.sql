@@ -51,9 +51,10 @@ ORDER BY ssn;
 For every employee who works for more than 20 hours on any project that is controlled by the research department: Find the ssn, project number,  and number of hours. Sort the results by ssn. NOTE: IS THIS SUPPOSED TO BE A 2 TABLE JOIN?
 */
 SELECT W.essn, W.pno, W.hours
-FROM works_on W, project P
+FROM works_on W, project P, department D
 WHERE W.hours > 20.0 AND
-    P.dnum = 5 AND
+    D.dname = 'Research' AND
+    P.dnum = D.dnumber AND
     W.pno = P.pnumber
 ORDER BY essn;
     
@@ -115,20 +116,38 @@ ORDER BY E1.lname;
 /*(16B)
 For every employee who has more than one dependent: Find the ssn, lname, and number of dependents. Sort the result by lname
 */
--- <<< Your SQL code goes here >>>
+SELECT E.ssn, E.lname, COUNT(*)
+FROM employee E, dependent D
+WHERE E.ssn = D.essn
+GROUP BY E.ssn, E.lname
+HAVING COUNT(*) > 1
+ORDER BY E.lname;
 -- 
 /*(17B)
 For every project that has more than 2 employees working on and the total hours worked on it is less than 40: Find the project number, project name, number of employees working on it, and the total number of hours worked by all employees on that project. Sort the results by project number.
 */
--- <<< Your SQL code goes here >>>
+SELECT P.pnumber, P.pname, COUNT(*), SUM(W.hours)
+FROM project P, works_on W
+WHERE P.pnumber = W.pno 
+GROUP BY P.pnumber, P.pname
+HAVING COUNT(*) > 2 AND
+    SUM(W.hours) < 40
+ORDER BY P.pnumber;
+
 --
 -- CORRELATED SUBQUERY --------------------------------
 --
 /*(18B)
 For every employee whose salary is above the average salary in his department: Find the dno, ssn, lname, and salary. Sort the results by department number.
 */
--- <<< Your SQL code goes here >>>
---
+SELECT DISTINCT E1.dno, E1.ssn, E1.lname, E1.salary
+FROM employee E1
+WHERE E1.salary > (SELECT AVG(E2.salary)
+                    FROM employee E2
+                    WHERE E1.dno = E2.dno)
+ORDER BY E1.dno;
+
+
 -- CORRELATED SUBQUERY -------------------------------
 --
 /*(19B)
