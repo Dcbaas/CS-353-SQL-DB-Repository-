@@ -158,9 +158,9 @@ SELECT E.ssn, E.lname
 FROM employee E, department D
 WHERE D.dname = 'Research' AND
     E.dno = D.dnumber AND
-    (SELECT W.hours
-        FROM works_on W 
-        WHERE W.essn = E.ssn) < 20
+    (SELECT MAX(W.hours)
+        FROM works_on W
+        WHERE E.ssn = W.essn) < 20
 ORDER BY E.lname;
 --
 -- DIVISION ---------------------------------------------

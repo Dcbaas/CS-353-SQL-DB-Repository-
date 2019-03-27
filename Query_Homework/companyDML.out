@@ -184,15 +184,14 @@ SQL> SELECT E.ssn, E.lname
   2  FROM employee E, department D
   3  WHERE D.dname = 'Research' AND
   4  	 E.dno = D.dnumber AND
-  5  	 (SELECT W.hours
+  5  	 (SELECT MAX(W.hours)
   6  	     FROM works_on W
-  7  	     WHERE W.essn = E.ssn) < 20
+  7  	     WHERE E.ssn = W.essn) < 20
   8  ORDER BY E.lname;
-    (SELECT W.hours
-     *
-ERROR at line 5:
-ORA-01427: single-row subquery returns more than one row 
 
+SSN       LNAME                                                                 
+--------- ---------------                                                       
+333445555 Wong                                                                  
 
 SQL> --
 SQL> -- DIVISION ---------------------------------------------
