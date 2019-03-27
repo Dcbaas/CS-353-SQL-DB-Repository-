@@ -142,9 +142,10 @@ For every employee whose salary is above the average salary in his department: F
 */
 SELECT DISTINCT E1.dno, E1.ssn, E1.lname, E1.salary
 FROM employee E1
-WHERE E1.salary > (SELECT AVG(E2.salary)
-                    FROM employee E2
-                    WHERE E1.dno = E2.dno)
+WHERE E1.salary > 
+    (SELECT AVG(E2.salary)
+    FROM employee E2
+    WHERE E1.dno = E2.dno)
 ORDER BY E1.dno;
 
 
@@ -153,7 +154,14 @@ ORDER BY E1.dno;
 /*(19B)
 For every employee who works for the research department but does not work on any one project for more than 20 hours: Find the ssn and lname. Sort the results by lname
 */
--- <<< Your SQL code goes here >>>
+SELECT E.ssn, E.lname
+FROM employee E, department D
+WHERE D.dname = 'Research' AND
+    E.dno = D.dnumber AND
+    (SELECT W.hours
+        FROM works_on W 
+        WHERE W.essn = E.ssn) < 20
+ORDER BY E.lname;
 --
 -- DIVISION ---------------------------------------------
 --

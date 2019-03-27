@@ -161,10 +161,11 @@ SQL> For every employee whose salary is above the average salary in his departme
 SQL> */
 SQL> SELECT DISTINCT E1.dno, E1.ssn, E1.lname, E1.salary
   2  FROM employee E1
-  3  WHERE E1.salary > (SELECT AVG(E2.salary)
-  4  			 FROM employee E2
-  5  			 WHERE E1.dno = E2.dno)
-  6  ORDER BY E1.dno;
+  3  WHERE E1.salary >
+  4  	 (SELECT AVG(E2.salary)
+  5  	 FROM employee E2
+  6  	 WHERE E1.dno = E2.dno)
+  7  ORDER BY E1.dno;
 
        DNO SSN       LNAME               SALARY                                 
 ---------- --------- --------------- ----------                                 
@@ -179,7 +180,20 @@ SQL> --
 SQL> /*(19B)
 SQL> For every employee who works for the research department but does not work on any one project for more than 20 hours: Find the ssn and lname. Sort the results by lname
 SQL> */
-SQL> -- <<< Your SQL code goes here >>>
+SQL> SELECT E.ssn, E.lname
+  2  FROM employee E, department D
+  3  WHERE D.dname = 'Research' AND
+  4  	 E.dno = D.dnumber AND
+  5  	 (SELECT W.hours
+  6  	     FROM works_on W
+  7  	     WHERE W.essn = E.ssn) < 20
+  8  ORDER BY E.lname;
+    (SELECT W.hours
+     *
+ERROR at line 5:
+ORA-01427: single-row subquery returns more than one row 
+
+
 SQL> --
 SQL> -- DIVISION ---------------------------------------------
 SQL> --
