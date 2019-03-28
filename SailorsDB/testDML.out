@@ -1,0 +1,69 @@
+SQL> SET ECHO ON
+SQL> 
+SQL> SELECT S1.sid, S1.sname, S2.sid, S2.sname
+  2  FROM
+  3  Sailors S1, Sailors S2, Reservations R1, Reservations R2
+  4  WHERE S1.sid = R1.sid AND
+  5  S2.sid = R2.sid AND
+  6  R1.forDate = R2.forDate AND
+  7  S1.sid < S2.sid;
+
+       SID SNAME                  SID SNAME                                     
+---------- --------------- ---------- ---------------                           
+        22 Dave                    58 Jim                                       
+
+SQL> 
+SQL> 
+SQL> SELECT S.sid, S.sname, COUNT(*)
+  2  FROM Reservations R, Sailors S
+  3  WHERE S.sid = R.sid AND
+  4  S.rating > 2;
+SELECT S.sid, S.sname, COUNT(*)
+       *
+ERROR at line 1:
+ORA-00937: not a single-group group function 
+
+
+SQL> 
+SQL> 
+SQL> 
+SQL> SELECT S.sid, S.sname
+  2  FROM Sailors S
+  3  WHERE NOT EXISTS((SELECT B.bid
+  4  	     FROM Boats B
+  5  	     WHERE B.bname = 'Interlake')
+  6  	 MINUS
+  7  	 (SELECT B.bid
+  8  	     FROM Reservations R, Boats B
+  9  	     WHERE R.sid = S.sid AND
+ 10  	     R.bid = B.bid AND
+ 11  	     B.bname = 'Interlake'));
+
+       SID SNAME                                                                
+---------- ---------------                                                      
+        22 Dave                                                                 
+        64 Jane                                                                 
+
+SQL> 
+SQL> SELECT B.bid
+  2  FROM Boats B
+  3  WHERE B.bname = 'Interlake';
+
+       BID                                                                      
+----------                                                                      
+       101                                                                      
+       102                                                                      
+
+SQL> 
+SQL> SELECT B.bid
+  2  FROM Reservations R, Boats B
+  3  WHERE R.sid = S.sid AND
+  4  R.bid = B.bid AND
+  5  B.bname = 'Interlake';
+WHERE R.sid = S.sid AND
+              *
+ERROR at line 3:
+ORA-00904: "S"."SID": invalid identifier 
+
+
+SQL> exit

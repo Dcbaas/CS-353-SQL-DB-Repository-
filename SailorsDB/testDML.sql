@@ -20,11 +20,21 @@ S.rating > 2;
 SELECT S.sid, S.sname
 FROM Sailors S
 WHERE NOT EXISTS((SELECT B.bid
-                FROM Boats B
-                WHERE B.bname = 'Interlake')
-                MINUS
-                (SELECT B.bid
-                FROM Reservations R, Boats B
-                WHERE R.sid = S.sid AND
-                R.bid = B.bid AND
-                B.bname = 'Interlake'));
+        FROM Boats B
+        WHERE B.bname = 'Interlake')
+    MINUS
+    (SELECT B.bid
+        FROM Reservations R, Boats B
+        WHERE R.sid = S.sid AND
+        R.bid = B.bid AND
+        B.bname = 'Interlake'));
+
+SELECT B.bid
+FROM Boats B
+WHERE B.bname = 'Interlake';
+
+SELECT B.bid
+FROM Reservations R, Boats B
+WHERE R.sid = S.sid AND
+R.bid = B.bid AND
+B.bname = 'Interlake';

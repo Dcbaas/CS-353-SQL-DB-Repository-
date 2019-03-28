@@ -168,7 +168,18 @@ ORDER BY E.lname;
 /*(20B) Hint: This is a DIVISION query
 For every employee who works on every project that is controlled by department 4: Find the ssn and lname. Sort the results by lname
 */
--- <<< Your SQL code goes here >>>
+SELECT E.ssn, E.lname
+FROM employee E
+WHERE NOT EXISTS((SELECT P.pnumber
+                FROM project P
+                WHERE P.dnum = 4)
+                MINUS
+                (SELECT P.pnumber
+                FROM works_on W, project P
+                WHERE W.essn = E.ssn AND
+                    W.pno = P.pnumber AND
+                    P.dnum = 4));
+                <F4>
 --
 SET ECHO OFF
 SPOOL OFF

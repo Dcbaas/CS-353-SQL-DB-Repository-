@@ -199,6 +199,24 @@ SQL> --
 SQL> /*(20B) Hint: This is a DIVISION query
 SQL> For every employee who works on every project that is controlled by department 4: Find the ssn and lname. Sort the results by lname
 SQL> */
-SQL> -- <<< Your SQL code goes here >>>
+SQL> SELECT E.ssn, E.lname
+  2  FROM employee E
+  3  WHERE NOT EXISTS((SELECT P.pnumber
+  4  		     FROM project P
+  5  		     WHERE P.dnum = 4)
+  6  		     MINUS
+  7  		     (SELECT P.pnumber
+  8  		     FROM works_on W, project P
+  9  		     WHERE W.essn = E.ssn AND
+ 10  			 W.pno = P.pnumber AND
+ 11  			 P.dnum = 4));
+
+SSN       LNAME                                                                 
+--------- ---------------                                                       
+999887777 Zelaya                                                                
+987987987 Jabbar                                                                
+
+SQL> 		     <F4>
+SP2-0042: unknown command "<F4>" - rest of line ignored.
 SQL> --
 SQL> SET ECHO OFF
