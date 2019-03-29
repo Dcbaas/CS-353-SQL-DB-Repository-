@@ -89,16 +89,16 @@ SQL> /*(14B)
 SQL> Write a query that consists of one block only.
 SQL> For every employee who works for a department that is different from his supervisor's department: Find his ssn, lname, department number; and his supervisor's ssn, lname, and department number. Sort the results by ssn.
 SQL> */
-SQL> SELECT E1.ssn, E1.lname, E1.dno, E1.super_ssn
+SQL> SELECT E1.ssn, E1.lname, E1.dno, E2.ssn, E2.lname, E2.dno
   2  FROM employee E1, employee E2
   3  WHERE E2.ssn = E1.super_ssn AND
   4  	 E2.dno <> E1.dno
   5  ORDER BY E1.ssn;
 
-SSN       LNAME                  DNO SUPER_SSN                                  
---------- --------------- ---------- ---------                                  
-333445555 Wong                     5 888665555                                  
-987654321 Wallace                  4 888665555                                  
+SSN       LNAME                  DNO SSN       LNAME                  DNO       
+--------- --------------- ---------- --------- --------------- ----------       
+333445555 Wong                     5 888665555 Borg                     1       
+987654321 Wallace                  4 888665555 Borg                     1       
 
 SQL> --
 SQL> -- USING MORE THAN ONE RANGE VARIABLE ON ONE TABLE -------------------
@@ -186,11 +186,12 @@ SQL> SELECT E.ssn, E.lname
   4  	 E.dno = D.dnumber AND
   5  	 (SELECT MAX(W.hours)
   6  	     FROM works_on W
-  7  	     WHERE E.ssn = W.essn) < 20
+  7  	     WHERE E.ssn = W.essn) <= 20
   8  ORDER BY E.lname;
 
 SSN       LNAME                                                                 
 --------- ---------------                                                       
+453453453 English                                                               
 333445555 Wong                                                                  
 
 SQL> --
@@ -216,7 +217,5 @@ SSN       LNAME
 999887777 Zelaya                                                                
 987987987 Jabbar                                                                
 
-SQL> 		     <F4>
-SP2-0042: unknown command "<F4>" - rest of line ignored.
 SQL> --
 SQL> SET ECHO OFF

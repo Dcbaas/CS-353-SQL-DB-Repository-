@@ -93,7 +93,7 @@ ORDER BY E.lname;
 Write a query that consists of one block only.
 For every employee who works for a department that is different from his supervisor's department: Find his ssn, lname, department number; and his supervisor's ssn, lname, and department number. Sort the results by ssn.  
 */
-SELECT E1.ssn, E1.lname, E1.dno, E1.super_ssn
+SELECT E1.ssn, E1.lname, E1.dno, E2.ssn, E2.lname, E2.dno
 FROM employee E1, employee E2
 WHERE E2.ssn = E1.super_ssn AND
     E2.dno <> E1.dno
@@ -160,7 +160,7 @@ WHERE D.dname = 'Research' AND
     E.dno = D.dnumber AND
     (SELECT MAX(W.hours)
         FROM works_on W
-        WHERE E.ssn = W.essn) < 20
+        WHERE E.ssn = W.essn) <= 20
 ORDER BY E.lname;
 --
 -- DIVISION ---------------------------------------------
@@ -179,7 +179,6 @@ WHERE NOT EXISTS((SELECT P.pnumber
                 WHERE W.essn = E.ssn AND
                     W.pno = P.pnumber AND
                     P.dnum = 4));
-                <F4>
 --
 SET ECHO OFF
 SPOOL OFF
