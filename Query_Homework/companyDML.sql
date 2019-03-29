@@ -48,7 +48,7 @@ ORDER BY ssn;
 -- JOINING 3 TABLES ------------------------------
 -- 
 /*(11B)
-For every employee who works for more than 20 hours on any project that is controlled by the research department: Find the ssn, project number,  and number of hours. Sort the results by ssn. NOTE: IS THIS SUPPOSED TO BE A 2 TABLE JOIN?
+For every employee who works for more than 20 hours on any project that is controlled by the research department: Find the ssn, project number,  and number of hours. Sort the results by ssn. 
 */
 SELECT W.essn, W.pno, W.hours
 FROM works_on W, project P, department D
